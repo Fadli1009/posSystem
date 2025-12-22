@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'id_merchant',
+        'id_role',
     ];
 
     /**
@@ -44,5 +46,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function merchant()
+    {
+        return $this->belongsTo(Merchant::class, 'id_merchant');
+    }
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
     }
 }
