@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Eye,
   EyeOff,
@@ -10,10 +10,19 @@ import {
   Building,
 } from "lucide-react";
 
+import api from "../utility/axios";
+
+const createUser = async (userData) => {
+  return await api.post("/registrasi", userData);
+};
 export default function Registrasi() {
-  const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const formRef = useRef(null);
+  const mutation = useMutation
+
+  const handleSubmit = async (e) => {};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
@@ -90,7 +99,7 @@ export default function Registrasi() {
               Daftar untuk memulai menggunakan POS Pro
             </p>
 
-            <div className="space-y-5">
+            <form className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -102,20 +111,7 @@ export default function Registrasi() {
                       type="text"
                       placeholder="John Doe"
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nomor Telepon
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="tel"
-                      placeholder="08123456789"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                      name="name"
                     />
                   </div>
                 </div>
@@ -130,6 +126,7 @@ export default function Registrasi() {
                   <input
                     type="text"
                     placeholder="Nama toko/bisnis"
+                    name="nama_merchant"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   />
                 </div>
@@ -144,6 +141,7 @@ export default function Registrasi() {
                   <input
                     type="email"
                     placeholder="nama@email.com"
+                    name="email"
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   />
                 </div>
@@ -157,6 +155,7 @@ export default function Registrasi() {
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Min. 8 karakter"
                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   />
@@ -183,6 +182,7 @@ export default function Registrasi() {
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Ulangi password"
+                    name="password_confirmation"
                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   />
                   <button
@@ -227,7 +227,7 @@ export default function Registrasi() {
               >
                 Daftar Sekarang
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
