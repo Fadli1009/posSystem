@@ -4,67 +4,126 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { 
-  Box, 
-  LayoutDashboard, 
-  Store, 
+import {
+  LayoutDashboard,
+  Store,
   ShoppingCart,
   FileText,
   Package,
   Layers,
   Users,
-  LogOut  
+  LogOut,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
+
 const items = [
-  { label: "Dashboard", href: "/dashboard",icon:<LayoutDashboard/> },
-  { label: "Transaksi/Kasir", href: "/transaksi",icon:<ShoppingCart/> },
-  { label: "Laporan Transaksi", href: "/laporan-transaksi",icon:<FileText/> },
-  { label: "Barang", href: "/barang",icon:<Package/> },
-  { label: "Kategori Barang", href: "/kategori-barang",icon:<Layers/> },
-  { label: "Pengguna", href: "/pengguna",icon:<Users/> },
-]
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Transaksi/Kasir", href: "/transaksi", icon: ShoppingCart },
+  { label: "Laporan Transaksi", href: "/laporan-transaksi", icon: FileText },
+  { label: "Barang", href: "/barang", icon: Package },
+  { label: "Kategori Barang", href: "/kategori-barang", icon: Layers },
+  { label: "Pengguna", href: "/pengguna", icon: Users },
+];
+
 const AppSidebar = () => {
-    return (
-      <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <div className="flex items-center">
-            <Store />
-            <span className="group-data-[collapsible=icon]:hidden ms-2 text-blue-800 font-semibold">POS System</span>
+  const location = useLocation();
+
+  return (
+    <Sidebar collapsible="icon" className="border-r border-orange-100">
+      {/* Header */}
+      <SidebarHeader className="h-16 border-b border-orange-100 bg-gradient-to-r from-orange-50 to-orange-100/50">
+        <div className="flex items-center h-full px-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
+          <div className="flex items-center gap-3 group-data-[collapsible=icon]:gap-0">
+            <div className="flex items-center justify-center w-9 h-9 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-md">
+              <Store className="text-white" size={20} strokeWidth={2.5} />
+            </div>
+            <div className="group-data-[collapsible=icon]:hidden flex flex-col">
+              <span className="text-orange-900 font-bold text-base leading-tight">
+                POS System
+              </span>
+              <span className="text-orange-600 text-xs font-medium">
+                Point of Sale
+              </span>
+            </div>
           </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarGroup>            
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-2 mt-2">
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.href} href={item.href}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.href} className="flex items-center">
-                        {item.icon}
-                        <span className="ms-2">{item.label}</span>
+        </div>
+      </SidebarHeader>
+
+      {/* Content */}
+      <SidebarContent className="bg-white">
+        <SidebarGroup>
+          <SidebarGroupContent className="px-3 py-3 group-data-[collapsible=icon]:px-0">
+            <SidebarMenu className="space-y-1">
+              {items.map((item) => {
+                const isActive = location.pathname === item.href;
+                const Icon = item.icon;
+
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton asChild tooltip={item.label}>
+                      <Link
+                        to={item.href}
+                        className={`
+                          flex items-center h-11 rounded-lg transition-all duration-200
+                          group-data-[collapsible=icon]:w-11 group-data-[collapsible=icon]:mx-auto
+                          group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0
+                          ${
+                            isActive
+                              ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md shadow-orange-200"
+                              : "text-gray-700 hover:bg-orange-50 hover:text-orange-700"
+                          }
+                          ${!isActive && "px-3 gap-3"}
+                          ${
+                            isActive &&
+                            "px-3 gap-3 group-data-[collapsible=icon]:gap-0"
+                          }
+                        `}
+                      >
+                        <Icon
+                          size={20}
+                          strokeWidth={2}
+                          className="flex-shrink-0"
+                        />
+                        <span className="group-data-[collapsible=icon]:hidden text-sm font-medium truncate">
+                          {item.label}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter >
-         <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
-    <LogOut size={18} />
-    <span>Logout</span>
-  </button>
-        </SidebarFooter>
-      </Sidebar>
-    );
-}
- 
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      {/* Footer */}
+      <SidebarFooter className="border-t border-orange-100 bg-orange-50/30 p-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:py-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Logout">
+              <button
+                className="flex items-center h-11 rounded-lg text-gray-700 hover:text-red-600 hover:bg-red-50 transition-all duration-200
+                  group-data-[collapsible=icon]:w-11 group-data-[collapsible=icon]:mx-auto
+                  group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0
+                  px-3 gap-3 group-data-[collapsible=icon]:gap-0 w-full"
+              >
+                <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
+                <span className="group-data-[collapsible=icon]:hidden text-sm font-medium">
+                  Logout
+                </span>
+              </button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+};
+
 export default AppSidebar;

@@ -12,13 +12,17 @@ import {
   Save,
 } from "lucide-react";
 import Layout from "../components/Layout";
+import Table from "../components/Table";
+import ModalCreate from "../components/ModalForm";
+import ModalAlert from "../components/ModalAlert";
+import ModalForm from "../components/ModalForm";
 
 const Barang = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Data dummy untuk contoh
   const products = [
     {
       id: 1,
@@ -66,6 +70,55 @@ const Barang = () => {
       supplier: "PT. Minyak Kita",
     },
   ];
+  const columns = [
+    {
+      label: "Kode",
+      key: "code",
+      type: "text",
+      className: "font-medium text-gray-900",
+    },
+    {
+      label: "Nama Barang",
+      key: "name",
+      type: "text",
+    },
+    {
+      label: "Kategori",
+      key: "category",
+      type: "badge",
+      badgeClass: "bg-blue-100 text-blue-700",
+    },
+    {
+      label: "Stok",
+      key: "stock",
+      type: "stock",
+    },
+    {
+      label: "Harga",
+      key: "price",
+      type: "currency",
+    },
+    {
+      label: "Supplier",
+      key: "supplier",
+      type: "text",
+      className: "text-gray-600",
+    },
+  ];
+  const handleEdit = (item) => {
+    console.log("Edit item:", item);
+    alert(`Edit: ${item.name}`);
+  };
+
+  const handleDelete = (item) => {
+    console.log("Delete item:", item);
+    alert(`Hapus: ${item.name}`);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    console.log("Page changed to:", page);
+  };
 
   return (
     <Layout className="p-6 bg-gray-50 min-h-screen">
@@ -167,423 +220,127 @@ const Barang = () => {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Kode
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nama Barang
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Kategori
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stok
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Harga
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Supplier
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-gray-900">
-                      {product.code}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-900">
-                      {product.name}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-                      {product.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`text-sm font-medium ${
-                        product.stock < 100 ? "text-red-600" : "text-gray-900"
-                      }`}
-                    >
-                      {product.stock}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-900">
-                      Rp {product.price.toLocaleString("id-ID")}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-600">
-                      {product.supplier}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setShowEditModal(true)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Edit"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setShowDeleteModal(true)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Hapus"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            Menampilkan 1-5 dari 245 barang
-          </div>
-          <div className="flex gap-2">
-            <button className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
-              Sebelumnya
-            </button>
-            <button className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-sm">
-              1
-            </button>
-            <button className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
-              2
-            </button>
-            <button className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
-              3
-            </button>
-            <button className="px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
-              Selanjutnya
-            </button>
-          </div>
-        </div>
+        <Table
+          columns={columns}
+          data={products}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          currentPage={currentPage}
+          totalPages={5}
+          totalItems={245}
+          itemsPerPage={10}
+          onPageChange={handlePageChange}
+          lowStockThreshold={100}
+        />
       </div>
 
       {/* Modal Tambah Barang */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50  flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
-              <h2 className="text-2xl font-bold text-gray-800">
-                Tambah Barang Baru
-              </h2>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+        <ModalForm type={"add"} judul={'Tambah Barang'} setShowAddModal={setShowAddModal}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Kode Barang
+              </label>
+              <input
+                type="text"
+                placeholder="BRG001"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
             </div>
 
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kode Barang
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="BRG001"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nama Barang
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nama barang"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kategori
-                  </label>
-                  <select className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
-                    <option>Pilih Kategori</option>
-                    <option>Makanan</option>
-                    <option>Minuman</option>
-                    <option>Kebersihan</option>
-                    <option>Sembako</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Supplier
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nama supplier"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Harga Beli
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Harga Jual
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Stok Awal
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Minimal Stok
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="0"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Deskripsi
-                  </label>
-                  <textarea
-                    rows="3"
-                    placeholder="Deskripsi barang (opsional)"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
-                  ></textarea>
-                </div>
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nama Barang
+              </label>
+              <input
+                type="text"
+                placeholder="Nama barang"
+                name="nama_barang"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
             </div>
 
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3 sticky bottom-0 bg-white">
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              >
-                Batal
-              </button>
-              <button className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium transition-colors">
-                <Save className="w-4 h-4" />
-                Simpan
-              </button>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Kategori
+              </label>
+              <select className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
+                <option>Pilih Kategori</option>
+                <option>Makanan</option>
+                <option>Minuman</option>
+                <option>Kebersihan</option>
+                <option>Sembako</option>
+              </select>
+            </div>        
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Harga Barang
+              </label>
+              <input
+                type="number"
+                placeholder="0"
+                name="harga"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Gambar
+              </label>
+              <input
+                type="file"
+                placeholder="0"
+                name="gambar"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Stok Awal
+              </label>
+              <input
+                type="number"
+                placeholder="0"
+                name="jumlah"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tanggal
+              </label>
+              <input
+                type="date"
+                name="tanggal"
+                placeholder="0"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Deskripsi
+              </label>
+              <textarea
+                rows="3"
+                placeholder="Deskripsi barang (opsional)"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
+              ></textarea>
             </div>
           </div>
-        </div>
+        </ModalForm>
       )}
 
       {/* Modal Edit Barang */}
-      {showEditModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
-              <h2 className="text-2xl font-bold text-gray-800">Edit Barang</h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kode Barang
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue="BRG001"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nama Barang
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue="Indomie Goreng"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kategori
-                  </label>
-                  <select className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none">
-                    <option selected>Makanan</option>
-                    <option>Minuman</option>
-                    <option>Kebersihan</option>
-                    <option>Sembako</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Supplier
-                  </label>
-                  <input
-                    type="text"
-                    defaultValue="PT. Indofood"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Harga Beli
-                  </label>
-                  <input
-                    type="number"
-                    defaultValue="2500"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Harga Jual
-                  </label>
-                  <input
-                    type="number"
-                    defaultValue="3500"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Stok
-                  </label>
-                  <input
-                    type="number"
-                    defaultValue="150"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Minimal Stok
-                  </label>
-                  <input
-                    type="number"
-                    defaultValue="20"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Deskripsi
-                  </label>
-                  <textarea
-                    rows="3"
-                    defaultValue="Mie instan rasa ayam bawang"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3 sticky bottom-0 bg-white">
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              >
-                Batal
-              </button>
-              <button className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium transition-colors">
-                <Save className="w-4 h-4" />
-                Update
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {showEditModal && <ModalForm setShowAddModal={setShowAddModal} />}
 
       {/* Modal Hapus */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
-            <div className="p-6">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Trash2 className="w-6 h-6 text-red-600" />
-              </div>
-              <h2 className="text-xl font-bold text-gray-800 text-center mb-2">
-                Hapus Barang?
-              </h2>
-              <p className="text-gray-600 text-center mb-6">
-                Apakah Anda yakin ingin menghapus barang ini? Tindakan ini tidak
-                dapat dibatalkan.
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowDeleteModal(false)}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-                >
-                  Batal
-                </button>
-                <button className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors">
-                  Hapus
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {showDeleteModal && <ModalAlert />}
     </Layout>
   );
 };
