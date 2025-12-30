@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import {Link} from 'react-router';
+import Input from "../components/Input";
 
 export default function LoginPages() {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,6 +22,7 @@ export default function LoginPages() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+
         {/* Left Panel - Branding */}
         <div className="md:w-2/5 bg-gradient-to-br from-orange-500 to-orange-600 p-8 md:p-12 flex flex-col justify-center text-white">
           <div className="mb-8">
@@ -89,7 +91,8 @@ export default function LoginPages() {
         <div className="md:w-3/5 p-8 md:p-12">          
          
           {/* Login Form */}
-          <div>
+          <form >
+            <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
               Selamat Datang!
             </h2>
@@ -98,34 +101,41 @@ export default function LoginPages() {
             </p>
 
             <div className="space-y-5">
+                {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  {/* <input
                     type="email"
-                    placeholder="nama@email.com"
+                    placeholder="nama@email.com" 
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  />
+                  /> */}
+
+                  <Input type={'email'} placeholder={'email@gmail.com'} name={'email'} id={'email'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'}/>
                 </div>
               </div>
 
+                {/* Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  {/* <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Masukkan password"
                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  />
+                  /> */}
+
+                   <Input type={showPassword ? 'text' : 'password'} placeholder={showPassword ? 'password' : '********'} name={'password'} id={'password'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'}/>
+
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword(!showPassword,)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
@@ -163,6 +173,7 @@ export default function LoginPages() {
               </button>
             </div>
           </div>
+          </form>
         </div>
       </div>
     </div>
