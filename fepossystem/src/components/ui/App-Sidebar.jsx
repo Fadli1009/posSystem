@@ -23,12 +23,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 const items = [
-  { label: "Dashboard", href: "/",icon:<LayoutDashboard/> },
-  { label: "Transaksi/Kasir", href: "/barang",icon:<ShoppingCart/> },
-  { label: "Laporan Transaksi", href: "/barang",icon:<FileText/> },
+  { label: "Dashboard", href: "/dashboard",icon:<LayoutDashboard/> },
+  { label: "Transaksi/Kasir", href: "/transaksi",icon:<ShoppingCart/> },
+  { label: "Laporan Transaksi", href: "/laporan-transaksi",icon:<FileText/> },
   { label: "Barang", href: "/barang",icon:<Package/> },
-  { label: "Kategori Barang", href: "/barang",icon:<Layers/> },
-  { label: "Pengguna", href: "/barang",icon:<Users/> },
+  { label: "Kategori Barang", href: "/kategori-barang",icon:<Layers/> },
+  { label: "Pengguna", href: "/pengguna",icon:<Users/> },
 ]
 const AppSidebar = () => {
     return (
