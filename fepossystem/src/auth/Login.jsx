@@ -11,7 +11,7 @@ import {
 //   Link,
 } from "lucide-react";
 
-import {data, Link} from 'react-router';
+import {data, Link, useNavigate} from 'react-router';
 import Input from "../components/Input";
 import api from "../utility/axios";
 import axios from "axios";
@@ -26,14 +26,15 @@ export default function LoginPages() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const navigate = useNavigate();
+
   const formRef = useRef(null);
 
   const mutation = useMutation({
     mutationFn : loginUser, 
     onSuccess: (data) => {
-          localStorage.setItem('token', data.token);
-
-          window.location.href = '/dashboard';
+          localStorage.setItem('token', data.data.token);
+          navigate('/dashboard')
       },
 
       onError: (error) => {
@@ -53,6 +54,8 @@ export default function LoginPages() {
     );
 
     const userData = Object.fromEntries(formData.entries());
+
+    userData.remember = userData.remember === 'on';
 
     mutation.mutate(userData);
   }
@@ -146,11 +149,7 @@ export default function LoginPages() {
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  {/* <input
-                    type="email"
-                    placeholder="nama@email.com" 
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  /> */}
+
 
                   <Input type={'email'} placeholder={'email@gmail.com'} name={'email'} id={'email'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'}/>
                 </div>
@@ -163,11 +162,7 @@ export default function LoginPages() {
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  {/* <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Masukkan password"
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  /> */}
+          
 
                    <Input type={showPassword ? 'text' : 'password'} placeholder={showPassword ? 'password' : '********'} name={'password'} id={'password'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'} />
 
@@ -191,7 +186,8 @@ export default function LoginPages() {
                     type="checkbox"
                     className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                   /> */}
-                  <Input type={'checkbox'} className={'w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500'} id={'remember'} name={'remember'}/>
+                  <Input type={'checkbox'} className={'w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500'} id={'remember'} name={'remember'} 
+                  />
                   <span className="ml-2 text-sm text-gray-600">Ingat saya</span>
                 </label>
                 <a
@@ -205,10 +201,10 @@ export default function LoginPages() {
                 <p>Belum memiliki akun ? <Link to={'/registrasi'} className="text-orange-500">Register di sini</Link></p>
 
                 <button
-                type="submit"
+                type="submit" disabled={mutation.isPending}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                >
-                    Login
+                 >
+                   {mutation.isPending ? 'Loading...' : 'Login'} 
                 </button>
             </div>
           </div>

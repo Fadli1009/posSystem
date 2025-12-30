@@ -10,11 +10,25 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { Box, LayoutDashboard, Store } from "lucide-react";
+import { 
+  Box, 
+  LayoutDashboard, 
+  Store, 
+  ShoppingCart,
+  FileText,
+  Package,
+  Layers,
+  Users,
+  LogOut  
+} from "lucide-react";
 import { Link } from "react-router";
 const items = [
   { label: "Dashboard", href: "/",icon:<LayoutDashboard/> },
-  { label: "Items", href: "/barang",icon:<Box/> },
+  { label: "Transaksi/Kasir", href: "/barang",icon:<ShoppingCart/> },
+  { label: "Laporan Transaksi", href: "/barang",icon:<FileText/> },
+  { label: "Barang", href: "/barang",icon:<Package/> },
+  { label: "Kategori Barang", href: "/barang",icon:<Layers/> },
+  { label: "Pengguna", href: "/barang",icon:<Users/> },
 ]
 const AppSidebar = () => {
     return (
@@ -43,7 +57,12 @@ const AppSidebar = () => {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter />
+        <SidebarFooter >
+         <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+    <LogOut size={18} />
+    <span>Logout</span>
+  </button>
+        </SidebarFooter>
       </Sidebar>
     );
 }
