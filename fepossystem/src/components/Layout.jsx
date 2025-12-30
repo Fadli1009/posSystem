@@ -1,17 +1,17 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import AppSidebar from "./ui/App-Sidebar";
-const Layout = ({children}) => {
-    return (
-      <SidebarProvider>
-        <AppSidebar />
-        <main>
-            <div className="p-2">
+const Layout = ({ children }) => {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        <div className="p-2">
           <SidebarTrigger />
-            </div>
-          <section className="p-2">{children}</section>
-        </main>
-      </SidebarProvider>
-    );
-}
- 
+        </div>
+        <section className="p-5 border">{children}</section>
+      </main>
+    </SidebarProvider>
+  );
+};
+
 export default Layout;

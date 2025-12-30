@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import api from "../utility/axios.jsx";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 
 const createUser = async (userData) => {
   return await api.post("/registrasi", userData);
@@ -21,11 +22,12 @@ export default function Registrasi() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const formRef = useRef(null);
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
       alert("Berhasil buat akun dan toko baru!");
-      console.log("User created successfully:", data);
+      navigate("/login");
     },
     onError: (error) => {
       console.error("Error creating user:", error);
