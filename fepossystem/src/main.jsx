@@ -24,5 +24,4 @@ createRoot(document.getElementById("root")).render(
   </QueryClientProvider>
 );
 import { Form } from "lucide-react";
-import Transaction from "./pages/Barang.jsx";import Barang from "./pages/Barang.jsx";
-
+import Transaction from "./pages/Transaction.jsx";
