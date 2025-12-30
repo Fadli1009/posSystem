@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Eye,
   EyeOff,
@@ -11,13 +11,51 @@ import {
 //   Link,
 } from "lucide-react";
 
-import {Link} from 'react-router';
+import {data, Link} from 'react-router';
 import Input from "../components/Input";
+import api from "../utility/axios";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+
+const loginUser = async (userData) => {
+  return await api.post('/login', userData)
+}
 
 export default function LoginPages() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const formRef = useRef(null);
+
+  const mutation = useMutation({
+    mutationFn : loginUser, 
+    onSuccess: (data) => {
+          localStorage.setItem('token', data.token);
+
+          window.location.href = '/dashboard';
+      },
+
+      onError: (error) => {
+          alert(
+              error.response?.data?.message || "Login gagal"
+          );
+      },
+  })
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();    
+
+    const form = formRef.current;
+
+    const formData =  new FormData(
+      form
+    );
+
+    const userData = Object.fromEntries(formData.entries());
+
+    mutation.mutate(userData);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
@@ -91,7 +129,7 @@ export default function LoginPages() {
         <div className="md:w-3/5 p-8 md:p-12">          
          
           {/* Login Form */}
-          <form >
+          <form  onSubmit={handleSubmit} ref={formRef}>
             <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
               Selamat Datang!
@@ -131,7 +169,7 @@ export default function LoginPages() {
                     className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   /> */}
 
-                   <Input type={showPassword ? 'text' : 'password'} placeholder={showPassword ? 'password' : '********'} name={'password'} id={'password'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'}/>
+                   <Input type={showPassword ? 'text' : 'password'} placeholder={showPassword ? 'password' : '********'} name={'password'} id={'password'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'} />
 
                   <button
                     type="button"
@@ -149,10 +187,11 @@ export default function LoginPages() {
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center">
-                  <input
+                  {/* <input
                     type="checkbox"
                     className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                  />
+                  /> */}
+                  <Input type={'checkbox'} className={'w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500'} id={'remember'} name={'remember'}/>
                   <span className="ml-2 text-sm text-gray-600">Ingat saya</span>
                 </label>
                 <a
@@ -163,14 +202,14 @@ export default function LoginPages() {
                 </a>
               </div>
 
-        <p>Belum memiliki akun ? <Link to={'/registrasi'} className="text-orange-500">Register di sini</Link></p>
+                <p>Belum memiliki akun ? <Link to={'/registrasi'} className="text-orange-500">Register di sini</Link></p>
 
-              <button
-                onClick={(e) => e.preventDefault()}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
-              >
-                Login
-              </button>
+                <button
+                type="submit"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                    Login
+                </button>
             </div>
           </div>
           </form>
