@@ -13,41 +13,47 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'remember' => 'boolean',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+                'remember' => 'boolean',
+            ]);
 
-        $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Email atau password salah!'
+                ], 401);
+            }
+
+            $user->tokens()->delete();
+
+            $expiresAt = $request->remember
+                ? now()->addDays(10)
+                : now()->addHours(2);
+
+            $token = $user->createToken(
+                're',
+                ['*'],
+                $expiresAt
+            )->plainTextToken;
+
             return response()->json([
-                'message' => 'Email atau password salah!'
-            ], 401);
+                'message' => 'Berhasil login',
+                'token_type' => 'Bearer',
+                'expires_at' => $expiresAt,
+                'user' => $user,
+                'token' => $token
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Registration failed: ' . $th->getMessage(), 'status' => false], 500);
         }
-
-        $user->tokens()->delete();
-
-        $expiresAt = $request->remember
-            ? now()->addDays(10)
-            : now()->addHours(2);
-        $token = $user->createaToken(
-            'auth_token',
-            ['*'],
-            $expiresAt
-        )->plainTextToken;
-
-        return response()->json([
-            'message' => 'Berhasil login',
-            'token_type' => 'Bearer',
-            'expires_at' => $expiresAt,
-            'user' => $user,
-        ], 200);
     }
     public function registrasi(Request $request)
     {
-        try {            
+        try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'nama_merchant' => 'required|string|max:255',
@@ -59,7 +65,7 @@ class AuthController extends Controller
                 'nama_merchant' => $validatedData['nama_merchant'],
                 'email_merchant' => $validatedData['email'],
             ]);
-    
+
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
