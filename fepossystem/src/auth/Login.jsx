@@ -8,7 +8,10 @@ import {
   User,
   Phone,
   Building,
+//   Link,
 } from "lucide-react";
+
+import {Link} from 'react-router';
 
 export default function LoginPages() {
   const [isLogin, setIsLogin] = useState(true);
@@ -149,6 +152,8 @@ export default function LoginPages() {
                   Lupa password?
                 </a>
               </div>
+
+        <p>Belum memiliki akun ? <Link to={'/registrasi'} className="text-orange-500">Register di sini</Link></p>
 
               <button
                 onClick={(e) => e.preventDefault()}
