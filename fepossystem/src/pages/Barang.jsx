@@ -236,7 +236,11 @@ const Barang = () => {
 
       {/* Modal Tambah Barang */}
       {showAddModal && (
-        <ModalForm type={"add"} judul={'Tambah Barang'} setShowAddModal={setShowAddModal}>
+        <ModalForm
+          type={"add"}
+          judul={"Tambah Barang"}
+          setShowAddModal={setShowAddModal}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -272,7 +276,7 @@ const Barang = () => {
                 <option>Kebersihan</option>
                 <option>Sembako</option>
               </select>
-            </div>        
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -320,17 +324,6 @@ const Barang = () => {
                 placeholder="0"
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Deskripsi
-              </label>
-              <textarea
-                rows="3"
-                placeholder="Deskripsi barang (opsional)"
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
-              ></textarea>
             </div>
           </div>
         </ModalForm>
