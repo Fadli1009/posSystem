@@ -9,20 +9,36 @@ import {
   Phone,
   Building,
 } from "lucide-react";
-
-import api from "../utility/axios";
+import api from "../utility/axios.jsx";
+import { useMutation } from "@tanstack/react-query";
 
 const createUser = async (userData) => {
   return await api.post("/registrasi", userData);
 };
+
 export default function Registrasi() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const formRef = useRef(null);
-  const mutation = useMutation
+  const mutation = useMutation({
+    mutationFn: createUser,
+    onSuccess: (data) => {
+      alert("Berhasil buat akun dan toko baru!");
+      console.log("User created successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error creating user:", error);
+    },
+  });
 
-  const handleSubmit = async (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = formRef.current;
+    const formData = new FormData(form);
+    const userData = Object.fromEntries(formData.entries());
+    mutation.mutate(userData);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
@@ -99,7 +115,7 @@ export default function Registrasi() {
               Daftar untuk memulai menggunakan POS Pro
             </p>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit} ref={formRef}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -199,7 +215,7 @@ export default function Registrasi() {
                 </div>
               </div>
 
-              <label className="flex items-start">
+              {/* <label className="flex items-start">
                 <input
                   type="checkbox"
                   className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 mt-1"
@@ -220,12 +236,13 @@ export default function Registrasi() {
                     Kebijakan Privasi
                   </a>
                 </span>
-              </label>
+              </label> */}
               <button
-                onClick={(e) => e.preventDefault()}
+                type="submit"
+                disabled={mutation.isPending}
                 className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
               >
-                Daftar Sekarang
+                {mutation.isPending ? "Loading..." : "Daftar Sekarang"}
               </button>
             </form>
           </div>
