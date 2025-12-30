@@ -221,7 +221,6 @@ export default function Registrasi() {
                   </a>
                 </span>
               </label>
-
               <button
                 onClick={(e) => e.preventDefault()}
                 className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
