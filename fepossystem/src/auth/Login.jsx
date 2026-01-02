@@ -8,18 +8,18 @@ import {
   User,
   Phone,
   Building,
-//   Link,
+  //   Link,
 } from "lucide-react";
 
-import {data, Link, useNavigate} from 'react-router';
+import { data, Link, useNavigate } from "react-router";
 import Input from "../components/Input";
 import api from "../utility/axios";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 const loginUser = async (userData) => {
-  return await api.post('/login', userData)
-}
+  return await api.post("/login", userData);
+};
 
 export default function LoginPages() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,39 +31,34 @@ export default function LoginPages() {
   const formRef = useRef(null);
 
   const mutation = useMutation({
-    mutationFn : loginUser, 
+    mutationFn: loginUser,
     onSuccess: (data) => {
-          localStorage.setItem('token', data.data.token);
-          navigate('/dashboard')
-      },
+      localStorage.setItem("token", data.data.token);
+      navigate("/dashboard");
+    },
 
-      onError: (error) => {
-          alert(
-              error.response?.data?.message || "Login gagal"
-          );
-      },
-  })
-  
+    onError: (error) => {
+      alert(error.response?.data?.message || "Login gagal");
+    },
+  });
+
   const handleSubmit = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
 
     const form = formRef.current;
 
-    const formData =  new FormData(
-      form
-    );
+    const formData = new FormData(form);
 
     const userData = Object.fromEntries(formData.entries());
 
-    userData.remember = userData.remember === 'on';
+    userData.remember = userData.remember === "on";
 
     mutation.mutate(userData);
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
-
         {/* Left Panel - Branding */}
         <div className="md:w-2/5 bg-gradient-to-br from-orange-500 to-orange-600 p-8 md:p-12 flex flex-col justify-center text-white">
           <div className="mb-8">
@@ -129,85 +124,112 @@ export default function LoginPages() {
         </div>
 
         {/* Right Panel - Form */}
-        <div className="md:w-3/5 p-8 md:p-12">          
-         
+        <div className="md:w-3/5 p-8 md:p-12">
           {/* Login Form */}
-          <form  onSubmit={handleSubmit} ref={formRef}>
+          <form onSubmit={handleSubmit} ref={formRef}>
             <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
-              Selamat Datang!
-            </h2>
-            <p className="text-gray-600 mb-8">
-              Silakan login untuk melanjutkan
-            </p>
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                Selamat Datang!
+              </h2>
+              <p className="text-gray-600 mb-8">
+                Silakan login untuk melanjutkan
+              </p>
 
-            <div className="space-y-5">
+              <div className="space-y-5">
                 {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
 
-
-                  <Input type={'email'} placeholder={'email@gmail.com'} name={'email'} id={'email'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'}/>
+                    <Input
+                      type={"email"}
+                      placeholder={"email@gmail.com"}
+                      name={"email"}
+                      id={"email"}
+                      className={
+                        "w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
 
                 {/* Password */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
 
-                   <Input type={showPassword ? 'text' : 'password'} placeholder={showPassword ? 'password' : '********'} name={'password'} id={'password'} className={'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition'} />
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder={showPassword ? "password" : "********"}
+                      name={"password"}
+                      id={"password"}
+                      className={
+                        "w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
+                      }
+                    />
 
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword,)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center">
-                  {/* <input
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center">
+                    {/* <input
                     type="checkbox"
                     className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                   /> */}
-                  <Input type={'checkbox'} className={'w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500'} id={'remember'} name={'remember'} 
-                  />
-                  <span className="ml-2 text-sm text-gray-600">Ingat saya</span>
-                </label>
-                <a
-                  href="#"
-                  className="text-sm text-orange-500 hover:text-orange-600 font-medium"
-                >
-                  Lupa password?
-                </a>
-              </div>
+                    <Input
+                      type={"checkbox"}
+                      className={
+                        "w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                      }
+                      id={"remember"}
+                      name={"remember"}
+                    />
+                    <span className="ml-2 text-sm text-gray-600">
+                      Ingat saya
+                    </span>
+                  </label>
+                  <a
+                    href="#"
+                    className="text-sm text-orange-500 hover:text-orange-600 font-medium"
+                  >
+                    Lupa password?
+                  </a>
+                </div>
 
-                <p>Belum memiliki akun ? <Link to={'/registrasi'} className="text-orange-500">Register di sini</Link></p>
+                <p>
+                  Belum memiliki akun ?{" "}
+                  <Link to={"/registrasi"} className="text-orange-500">
+                    Register di sini
+                  </Link>
+                </p>
 
                 <button
-                type="submit" disabled={mutation.isPending}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
-                 >
-                   {mutation.isPending ? 'Loading...' : 'Login'} 
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+                >
+                  {mutation.isPending ? "Loading..." : "Login"}
                 </button>
+              </div>
             </div>
-          </div>
           </form>
         </div>
       </div>

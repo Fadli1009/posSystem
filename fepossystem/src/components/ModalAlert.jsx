@@ -6,6 +6,7 @@ const ModalAlert = ({
   confirm,
   action,
   selectedBarang,
+  namaItem,
 }) => {
   const titleMap = {
     hapus: "Hapus Data?",
@@ -24,7 +25,7 @@ const ModalAlert = ({
             {titleMap[tipe] || "Konfirmasi Aksi"}
           </h2>
           <p className="text-gray-600 text-center mb-6">
-            {confirm} {selectedBarang && `(${selectedBarang.nama_barang})`}
+            {confirm} {selectedBarang && `(${namaItem})`}
           </p>
           <div className="flex gap-3">
             <button
