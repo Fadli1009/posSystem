@@ -21,13 +21,18 @@ import {
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { use, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import api from "../utility/axios";
 
 const KategoriBarang = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAlertDel, setShowDelAlert] = useState(false);
-  const [idKategori, setIdKategori] = useState();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [kategori, setKategori] = useState({
+    id: null,
+    nama_kategori: "",
+  });
+  // const [namaKategori, setNamaKategori] = useState(null);
 
   const refKategori = useRef(null);
 
@@ -44,22 +49,19 @@ const KategoriBarang = () => {
       key: "nama_kategori",
       type: "text",
     },
-
-    // {
-    //   label: "Action",
-    //   key: "action",
-    //   type: "text",
-    //   className: "text-gray-600",
-    // },
   ];
 
   const handleDelete = (item) => {
     setShowDelAlert(true);
-    setIdKategori(item);
+    setKategori(item);
   };
 
-  const handleEdit = () => {
-    alert("duar edit");
+  const handleEdit = (item) => {
+    setShowEditModal(true);
+    setKategori({
+      id: item.id,
+      nama_kategori: item.nama_kategori ?? "",
+    });
   };
 
   const queryQlient = useQueryClient();
@@ -85,6 +87,16 @@ const KategoriBarang = () => {
     },
   });
 
+  const mutationEdit = useMutation({
+    mutationFn: async ({ id, payload }) => {
+      const res = await api.put(`/kategori-barang/${id}`, payload);
+    },
+    onSuccess: () => {
+      queryQlient.invalidateQueries({ queryKey: ["kategori-barang"] });
+      setShowEditModal(false);
+    },
+  });
+
   const mutationDel = useMutation({
     mutationFn: async (id) => {
       const res = await api.delete(`/kategori-barang/${id}`);
@@ -103,8 +115,19 @@ const KategoriBarang = () => {
     mutation.mutate(formData);
   };
 
+  const submitEditKategori = (e) => {
+    e.preventDefault();
+
+    mutationEdit.mutate({
+      id: kategori.id,
+      payload: {
+        nama_kategori: kategori.nama_kategori,
+      },
+    });
+  };
+
   const actionDelete = () => {
-    mutationDel.mutate(idKategori.id);
+    mutationDel.mutate(kategori.id);
   };
 
   return (
@@ -227,7 +250,7 @@ const KategoriBarang = () => {
       {showAddModal && (
         <ModalForm
           type={"add"}
-          judul={"Tambah Barang"}
+          judul={"Tambah Kategori"}
           setShowAddModal={setShowAddModal}
           idForm={"submitAddData"}
         >
@@ -251,7 +274,35 @@ const KategoriBarang = () => {
       )}
 
       {/* Modal Edit Barang */}
-      {/* {showEditModal && <ModalForm setShowAddModal={setShowAddModal} />} */}
+      {showEditModal && (
+        <ModalForm
+          type={"update"}
+          judul={"Perbarui Kategori"}
+          setShowAddModal={setShowEditModal}
+          idForm={"submitEditKategori"}
+        >
+          <form
+            className="p-8"
+            onSubmit={submitEditKategori}
+            id="submitEditKategori"
+            ref={refKategori}
+          >
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nama Kategori
+            </label>
+            <input
+              type="text"
+              placeholder="Nama kategori"
+              name="nama_kategori"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              value={kategori.nama_kategori}
+              onChange={(e) =>
+                setKategori({ ...kategori, nama_kategori: e.target.value })
+              }
+            />
+          </form>
+        </ModalForm>
+      )}
 
       {/* Modal Hapus */}
       {showAlertDel && (
@@ -260,8 +311,8 @@ const KategoriBarang = () => {
           confirm={"Yakin ingin menghapus kategiri ini?"}
           action={actionDelete}
           setShowDeleteModal={setShowDelAlert}
-          selectedBarang={idKategori}
-          namaItem={idKategori.nama_kategori}
+          selectedBarang={kategori}
+          namaItem={kategori.nama_kategori}
         />
       )}
     </Layout>
