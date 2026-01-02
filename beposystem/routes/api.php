@@ -17,10 +17,6 @@ Route::post('/registrasi', [AuthController::class, 'registrasi']);
 Route::group(['middleware'=>'auth:sanctum'], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('barang',BarangController::class);
-});
-
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-
-Route::group(['middleware'  => 'auth:sanctum'], function(){
-   Route::resource('/kategori-barang', KategoriController::class);
+    Route::resource('/kategori-barang', KategoriController::class);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });

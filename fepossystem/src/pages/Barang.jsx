@@ -49,6 +49,11 @@ const editBarang = async ({ id, payload }) => {
   return res.data;
 };
 
+const getkategori = async () => {
+  const res = await api.get("/kategori-barang");
+  return res.data.data;
+};
+
 const Barang = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -112,6 +117,11 @@ const Barang = () => {
     onSuccess: (data) => {
       setShowEditModal(false);
     },
+  });
+
+  const dataKategori = useQuery({
+    queryKey: ["kategori"],
+    queryFn: getkategori,
   });
 
   const totalHarga = data.reduce((total, item) => {
@@ -226,7 +236,7 @@ const Barang = () => {
 
   const getMininmumStok = data.reduce((min, item) => {
     return item.jumlah < min ? item.jumlah : min;
-  }, Infinity);
+  }, 0);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -280,7 +290,9 @@ const Barang = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-500 text-sm mb-1">Kategori</p>
-              <h3 className="text-2xl font-bold text-gray-800">18</h3>
+              <h3 className="text-2xl font-bold text-gray-800">
+                {dataKategori.length || 0}
+              </h3>
             </div>
             <div className="bg-blue-100 p-3 rounded-lg">
               <Filter className="w-6 h-6 text-blue-500" />
@@ -389,8 +401,12 @@ const Barang = () => {
                   name="id_kategori"
                 >
                   <optio>Pilih Kategori</optio>
-                  <option value={1}>Makanan</option>
-                  <option value={2}>Minuman</option>
+                  {dataKategori.data &&
+                    dataKategori.data.map((kategori) => (
+                      <option key={kategori.id} value={kategori.id}>
+                        {kategori.nama_kategori}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -564,10 +580,11 @@ const Barang = () => {
       {showDeleteModal && (
         <ModalAlert
           tipe={"hapus"}
-          confirm={"apakah yakin ingin menhapus barang?"}
+          confirm={"apakah yakin ingin menghapus barang?"}
           action={handleDeleteBarang}
           setShowDeleteModal={setShowDeleteModal}
           selectedBarang={selectedBarang}
+          namaItem={selectedBarang.nama_barang}
         />
       )}
     </Layout>

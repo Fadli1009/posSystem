@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_merchant');
             $table->unsignedBigInteger('id_kategori');
-            $table->string('barcode', 255);
+            $table->string('barcode', 255)->unique();
             $table->string('nama_barang', 150);
             $table->string('gambar', 255);
             $table->integer('jumlah');
