@@ -78,4 +78,13 @@ class AuthController extends Controller
             return response()->json(['message' => 'Registration failed: ' . $th->getMessage(), 'status' => false], 500);
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'berhasil logout'
+        ], 200);
+    }
 }

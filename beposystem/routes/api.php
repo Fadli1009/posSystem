@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KategoriController;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 
 
@@ -15,4 +17,10 @@ Route::post('/registrasi', [AuthController::class, 'registrasi']);
 Route::group(['middleware'=>'auth:sanctum'], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('barang',BarangController::class);
+});
+
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
+Route::group(['middleware'  => 'auth:sanctum'], function(){
+   Route::resource('/kategori-barang', KategoriController::class);
 });

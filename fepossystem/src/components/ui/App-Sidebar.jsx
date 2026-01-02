@@ -9,7 +9,9 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
+
 import {
+  Box,
   LayoutDashboard,
   Store,
   ShoppingCart,
@@ -19,18 +21,39 @@ import {
   Users,
   LogOut,
 } from "lucide-react";
-import { Link, useLocation } from "react-router";
 
-const items = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Transaksi/Kasir", href: "/transaksi", icon: ShoppingCart },
-  { label: "Laporan Transaksi", href: "/laporan-transaksi", icon: FileText },
-  { label: "Barang", href: "/barang", icon: Package },
-  { label: "Kategori Barang", href: "/kategori-barang", icon: Layers },
-  { label: "Pengguna", href: "/pengguna", icon: Users },
-];
+import api from "../../utility/axios";
+
+import { Link, useLocation, useNavigate } from "react-router";
 
 const AppSidebar = () => {
+  const items = [
+    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { label: "Transaksi/Kasir", href: "/transaksi", icon: ShoppingCart },
+    {
+      label: "Laporan Transaksi",
+      href: "/laporan-transaksi",
+      icon: FileText,
+    },
+    { label: "Barang", href: "/barang", icon: Package },
+    { label: "Kategori Barang", href: "/kategori-barang", icon: Layers },
+    { label: "Pengguna", href: "/pengguna", icon: Users },
+  ];
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/logout");
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+
+      alert("gagal logout");
+    }
+  };
+
   const location = useLocation();
 
   return (
@@ -108,6 +131,7 @@ const AppSidebar = () => {
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Logout">
               <button
+                onClick={handleLogout}
                 className="flex items-center h-11 rounded-lg text-gray-700 hover:text-red-600 hover:bg-red-50 transition-all duration-200
                   group-data-[collapsible=icon]:w-11 group-data-[collapsible=icon]:mx-auto
                   group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0
