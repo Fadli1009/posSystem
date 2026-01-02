@@ -141,6 +141,8 @@ const Barang = () => {
     return angka.toString();
   };
 
+  const jumlahKategori = new Set(data.map((item) => item.id_kategori)).size;
+
   const columns = [
     {
       label: "No",
@@ -291,7 +293,7 @@ const Barang = () => {
             <div>
               <p className="text-gray-500 text-sm mb-1">Kategori</p>
               <h3 className="text-2xl font-bold text-gray-800">
-                {dataKategori.length || 0}
+                {jumlahKategori || 0}
               </h3>
             </div>
             <div className="bg-blue-100 p-3 rounded-lg">
