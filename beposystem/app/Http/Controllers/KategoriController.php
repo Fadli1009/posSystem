@@ -157,6 +157,7 @@ class KategoriController extends Controller
             $kategoriBarang->delete();
 
             Cache::forget("kategoriBarang_{$id_merchant}");
+            Cache::forget("barang");
 
             return response()->json([
                 'status' => true,
