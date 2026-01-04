@@ -1,4 +1,4 @@
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Loader2 } from "lucide-react";
 
 const Table = ({
   columns = [],
@@ -11,6 +11,7 @@ const Table = ({
   itemsPerPage = 10,
   onPageChange,
   lowStockThreshold = 100,
+  isLoading = false,
 }) => {
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -112,6 +113,30 @@ const Table = ({
         );
     }
   };
+
+  // Loading skeleton row
+  const LoadingSkeleton = () => (
+    <>
+      {[...Array(itemsPerPage)].map((_, index) => (
+        <tr key={index} className="animate-pulse">
+          {columns.map((_, colIndex) => (
+            <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
+              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            </td>
+          ))}
+          {(onEdit || onDelete) && (
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="flex gap-2">
+                <div className="h-8 w-8 bg-gray-200 rounded-lg"></div>
+                <div className="h-8 w-8 bg-gray-200 rounded-lg"></div>
+              </div>
+            </td>
+          )}
+        </tr>
+      ))}
+    </>
+  );
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -134,7 +159,9 @@ const Table = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.length === 0 ? (
+            {isLoading ? (
+              <LoadingSkeleton />
+            ) : data.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length + (onEdit || onDelete ? 1 : 0)}
@@ -204,7 +231,7 @@ const Table = ({
       </div>
 
       {/* Pagination */}
-      {data.length > 0 && totalPages > 1 && (
+      {!isLoading && data.length > 0 && totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-gray-600">
             Menampilkan {startItem}-{endItem} dari {totalItems} data
@@ -256,6 +283,16 @@ const Table = ({
             >
               Selanjutnya
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loading Pagination */}
+      {isLoading && (
+        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-center">
+          <div className="flex items-center gap-2 text-gray-500">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span className="text-sm">Memuat data...</span>
           </div>
         </div>
       )}

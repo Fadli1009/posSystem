@@ -16,6 +16,7 @@ import Input from "../components/Input";
 import api from "../utility/axios";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import Loading from "../components/Loading";
 
 const loginUser = async (userData) => {
   return await api.post("/login", userData);
@@ -226,7 +227,14 @@ export default function LoginPages() {
                   disabled={mutation.isPending}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-colors shadow-lg hover:shadow-xl"
                 >
-                  {mutation.isPending ? "Loading..." : "Login"}
+                  {mutation.isPending ? (
+                    <div className="flex items-center justify-center">
+                      <Loading size={20} />
+                      <p className="ms-2">loading</p>
+                    </div>
+                  ) : (
+                    "Login"
+                  )}
                 </button>
               </div>
             </div>

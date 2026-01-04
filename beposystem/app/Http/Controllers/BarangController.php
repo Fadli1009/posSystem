@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class BarangController extends Controller
 {
@@ -114,14 +115,14 @@ class BarangController extends Controller
     {
         try {
             $validate = $request->validate([
-                'nama_barang'=>'required|string',
-                'harga'=>'required|numeric',
-                'jumlah'=>'required|numeric',                
-                'tanggal'=>'required',
-                'barqode'=>'required',
-                'id_merchant'=>'required',
-                'id_kategori'=>'required',            
-                'gambar'=>'nullable|mimes:jpg,png,jpeg|max:2048',        
+                'nama_barang'=>'sometimes|string',
+                'harga'=>'sometimes|numeric',
+                'jumlah'=>'sometimes|numeric',                
+                'tanggal'=>'sometimes',
+                'barqode'=>'nullable',
+                'id_merchant'=>'nullable',
+                'id_kategori'=>'nullable',            
+                'gambar'=>'sometimes|mimes:jpg,png,jpeg|max:2048',        
             ],[
                 'nama_barang.required'=>'Nama barang wajib diisi',
                 'harga.required'=>'Harga barang wajib diisi',
@@ -130,7 +131,7 @@ class BarangController extends Controller
                 'barqode.required'=>'Barqode wajib diisi',
                 'id_merchant.required'=>'ID merchant wajib diisi',
                 'id_kategori.required'=>'ID kategori wajib diisi',                
-            ]);
+            ]);            
             if($request->hasFile('gambar')){
                 $image = $request->file('gambar');
                 $imageName = time().'_' . uniqid() . '.' . $image->getClientOriginalExtension();
@@ -151,7 +152,10 @@ class BarangController extends Controller
     public function destroy(Barang $barang)
     {
         try {
-            Cache::forget('barang');
+            Cache::forget('barang');    
+            if($barang->gambar && Storage::disk('public')->exists('image/'.$barang->gambar)){
+                Storage::disk('public')->delete('image/'.$barang->gambar);
+            }
             $barang->delete();
             return response()->json(['data'=>null,'status'=>true,'message'=>'Berhasil menghapus data barang'],200);
         } catch (\Throwable $th) {

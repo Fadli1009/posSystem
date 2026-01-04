@@ -5,8 +5,8 @@ const ModalForm = ({
   children,
   judul,
   type,
-  isLoading,
-  idForm,  
+  mutation,
+  idForm,
 }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -34,11 +34,11 @@ const ModalForm = ({
             className="flex items-center gap-2 px-5 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium transition-colors"
             type="submit"
             form={idForm}
-            disabled={isLoading}
+            disabled={mutation}
           >
             <Save className="w-4 h-4" />
             {type === "add" ? "Simpan" : "Perbarui"}
-            {isLoading ? "..." : ""}
+            {mutation ? "..." : ""}
           </button>
         </div>
       </div>

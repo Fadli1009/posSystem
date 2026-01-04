@@ -41,11 +41,8 @@ const deleteBarang = async (id) => {
 
 // consume edit barang
 const editBarang = async ({ id, payload }) => {
-  const res = await api.put(`/barang/${id}`, payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  payload.append("_method", "PUT");
+  const res = await api.post(`/barang/${id}`, payload);
   return res.data;
 };
 
@@ -116,6 +113,7 @@ const Barang = () => {
     mutationFn: editBarang,
     onSuccess: (data) => {
       setShowEditModal(false);
+      queryClient.invalidateQueries({ queryKey: ["barang"] });
     },
   });
 
@@ -244,11 +242,7 @@ const Barang = () => {
     setCurrentPage(page);
     console.log("Page changed to:", page);
   };
-
-  if (isLoading) return <div>Loading...</div>;
-
   if (error) return <div>Error loading data</div>;
-  console.log(showEditModal);
 
   return (
     <Layout className="p-6 bg-gray-50 min-h-screen">
@@ -364,13 +358,14 @@ const Barang = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           lowStockThreshold={30}
+          isLoading={isLoading}
         />
       </div>
 
       {/* Modal Tambah Barang */}
       {showAddModal && (
         <ModalForm
-          isLoading={mutation.isLoading}
+          mutation={mutation.isLoading}
           type={"add"}
           judul={"Tambah Barang"}
           setShowAddModal={setShowAddModal}
@@ -402,7 +397,7 @@ const Barang = () => {
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   name="id_kategori"
                 >
-                  <optio>Pilih Kategori</optio>
+                  <option selected>Pilih Kategori</option>
                   {dataKategori.data &&
                     dataKategori.data.map((kategori) => (
                       <option key={kategori.id} value={kategori.id}>
@@ -501,13 +496,17 @@ const Barang = () => {
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   name="id_kategori"
                   value={itemEdit.id_kategori}
-                  onChange={(e) => {
-                    setItemEdit({ ...itemEdit, id_kategori: e.target.value });
+                  onChange={(e)=>{
+                    setItemEdit({...itemEdit,id_kategori:e.target.value})
                   }}
                 >
-                  <option selected>Pilih Kategori</option>
-                  <option value="1">Makanan</option>
-                  <option value="2">Minuman</option>
+                  <option>Pilih Kategori</option>
+                  {dataKategori.data &&
+                    dataKategori.data.map((kategori) => (
+                      <option key={kategori.id} value={kategori.id}>
+                        {kategori.nama_kategori}
+                      </option>
+                    ))}
                 </select>
               </div>
 

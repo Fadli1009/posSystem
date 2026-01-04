@@ -237,6 +237,7 @@ const KategoriBarang = () => {
           data={data || []}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          isLoading={isLoading}
           //   currentPage={currentPage}
           //   totalPages={5}
           //   totalItems={245}
