@@ -7,6 +7,7 @@ const ModalAlert = ({
   action,
   selectedBarang,
   namaItem,
+  isLoading,
 }) => {
   const titleMap = {
     hapus: "Hapus Data?",
@@ -25,20 +26,22 @@ const ModalAlert = ({
             {titleMap[tipe] || "Konfirmasi Aksi"}
           </h2>
           <p className="text-gray-600 text-center mb-6">
-            {confirm} {selectedBarang && `(${namaItem})`}
+            {confirm}
           </p>
           <div className="flex gap-3">
             <button
               onClick={() => setShowDeleteModal(false)}
               className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+              disabled={isLoading}
             >
               Batal
             </button>
             <button
-              onClick={() => action(selectedBarang)}
+              onClick={action}
               className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium transition-colors"
+              disabled={isLoading}
             >
-              Hapus
+              {isLoading ? "Menghapus..." : "Hapus"}
             </button>
           </div>
         </div>

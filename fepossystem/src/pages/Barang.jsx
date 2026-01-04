@@ -367,7 +367,7 @@ const Barang = () => {
         <ModalForm
           mutation={mutation.isLoading}
           type={"add"}
-          judul={"Tambah Barang"}
+          judul={"Tambah Barang"}          
           setShowAddModal={setShowAddModal}
           idForm={"formAdd"}
         >
@@ -496,8 +496,8 @@ const Barang = () => {
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   name="id_kategori"
                   value={itemEdit.id_kategori}
-                  onChange={(e)=>{
-                    setItemEdit({...itemEdit,id_kategori:e.target.value})
+                  onChange={(e) => {
+                    setItemEdit({ ...itemEdit, id_kategori: e.target.value });
                   }}
                 >
                   <option>Pilih Kategori</option>
@@ -580,12 +580,12 @@ const Barang = () => {
       {/* Modal Hapus */}
       {showDeleteModal && (
         <ModalAlert
+          isLoading={deleteMutation.isLoading}
           tipe={"hapus"}
-          confirm={"apakah yakin ingin menghapus barang?"}
+          confirm={`apakah yakin ingin menghapus ${selectedBarang.nama_barang}?`}
           action={handleDeleteBarang}
           setShowDeleteModal={setShowDeleteModal}
           selectedBarang={selectedBarang}
-          namaItem={selectedBarang.nama_barang}
         />
       )}
     </Layout>

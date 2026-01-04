@@ -309,11 +309,9 @@ const KategoriBarang = () => {
       {showAlertDel && (
         <ModalAlert
           tipe={"hapus"}
-          confirm={"Yakin ingin menghapus kategiri ini?"}
+          confirm={`Yakin ingin menghapus ketegori ${kategori.nama_kategori} ? `}
           action={actionDelete}
           setShowDeleteModal={setShowDelAlert}
-          selectedBarang={kategori}
-          namaItem={kategori.nama_kategori}
         />
       )}
     </Layout>
