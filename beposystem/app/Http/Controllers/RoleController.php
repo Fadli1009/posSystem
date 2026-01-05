@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
 
 class RoleController extends Controller
 {
@@ -12,7 +14,29 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        try {
+
+            // Cache::forget('role');
+
+            $role = Cache::remember('role', 
+        now()->addMinutes(60)
+        , function () {
+            return Role::select('id','nama_role')
+            ->get();
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Berhasil mengambil data role',
+            'data' => $role
+        ]);
+        } catch (\Throwable $th) {
+               return response()->json([
+            'status' => false,
+            'message' => 'Gagal mendapatkan data role',
+            'data' => $th->getMessage()
+        ]);
+        }
     }
 
     /**

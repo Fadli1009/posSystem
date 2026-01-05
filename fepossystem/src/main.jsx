@@ -11,6 +11,7 @@ import Barang from "./pages/Barang.jsx";
 import LaporanTransaksi from "./pages/LaporanTransaksi.jsx";
 import Pengguna from "./pages/Pengguna.jsx";
 import Transaksi from "./pages/Transaksi.jsx";
+import ProfilPengguna from "./pages/ProfilPengguna.jsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/laporan-transaksi" element={<LaporanTransaksi />} />
         <Route path="/pengguna" element={<Pengguna />} />
         <Route path="/transaksi" element={<Transaksi />} />
+        <Route path="/profil-pengguna" element={<ProfilPengguna />} />
       </Routes>
     </BrowserRouter>
   </QueryClientProvider>
