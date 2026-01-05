@@ -5,11 +5,13 @@ import { ChevronDown, LogOut, User, Settings } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../utility/axios";
 import { LoadingWithLogo } from "./loading/loadingWithLog";
+import { Link } from "react-router";
 
 const user = async () => {
   const res = await api.get("/me");
   return res.data;
 };
+
 const Layout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -104,7 +106,9 @@ const Layout = ({ children }) => {
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <User size={16} />
-                      <span>Profile</span>
+                      <Link to={"/profil-pengguna"}>
+                        <span>Profile</span>
+                      </Link>
                     </button>
 
                     <button

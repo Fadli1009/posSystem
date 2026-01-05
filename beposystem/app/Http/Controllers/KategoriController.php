@@ -17,7 +17,7 @@ class KategoriController extends Controller
     public function index(Request $request)
     {
     try {
-        $id_merchant = auth()->user()->id_merchant;
+        $id_merchant = Auth::user()->id_merchant;
 
         $kategoriBarang = Cache::remember(
             "kategoriBarang_{$id_merchant}",
@@ -56,7 +56,7 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         try {
-            $id_merchant = auth()->user()->id_merchant;
+            $id_merchant = Auth::user()->id_merchant;
 
              $request->validate([
                 'nama_kategori'=>'required|string|max:150'
@@ -109,7 +109,7 @@ class KategoriController extends Controller
     {
         try {
             // dd($request->all());
-            $id_merchant = auth()->user()->id_merchant;
+            $id_merchant = Auth::user()->id_merchant;
             
             $kategoriBarang = Kategori::where('id_merchant', $id_merchant)
             ->findOrFail($id);
@@ -149,7 +149,7 @@ class KategoriController extends Controller
     public function destroy($id)
     {
         try {
-            $id_merchant = auth()->user()->id_merchant;
+            $id_merchant = Auth::user()->id_merchant;
 
              $kategoriBarang = Kategori::where('id_merchant', $id_merchant)
             ->findOrFail($id);
