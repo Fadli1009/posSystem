@@ -14,9 +14,9 @@ class BarangController extends Controller
      */
     public function index()
     {
+        $id_merchant = auth()->user()->id_merchant;                    
         try {
-            $data = Cache::remember('barang',60,function(){
-            $id_merchant = auth()->user()->id_merchant;                
+            $data = Cache::remember("barang_{$id_merchant}",60,function() use($id_merchant){
             return Barang::with('kategori')->where('id_merchant',$id_merchant)->get();
         });
         return response()->json(['data'=>$data,'status'=>true,'message'=>'Berhasil mengambil data barang'],200);
@@ -72,9 +72,9 @@ class BarangController extends Controller
             }else{
                 $newNum=1;
             }
-              $id_merchant = auth()->user()->id_merchant;   
+            $id_merchant = auth()->user()->id_merchant;   
             $kodeBarang = 'BRG'. str_pad($newNum,4,'0',STR_PAD_LEFT);
-            Cache::forget('barang');
+            Cache::forget("barang_{$id_merchant}");
             $barang = Barang::create([
                 'nama_barang'=>$validate['nama_barang'],
                 'harga'=>$validate['harga'],
@@ -114,6 +114,7 @@ class BarangController extends Controller
     public function update(Request $request, Barang $barang)
     {
         try {
+            $id_merchant = auth()->user()->id_merchant;   
             $validate = $request->validate([
                 'nama_barang'=>'sometimes|string',
                 'harga'=>'sometimes|numeric',
@@ -138,7 +139,7 @@ class BarangController extends Controller
                 $image->storeAs('image',$imageName,'public');   
                 $validate['gambar'] = $imageName;
             }            
-            Cache::forget('barang');
+            Cache::forget("barang_{$id_merchant}");
             $barang->update($validate);
             return response()->json(['data'=>$barang,'status'=>true,'message'=>'Berhasil mengupdate data barang'],200);
         } catch (\Throwable $th) {
@@ -152,7 +153,8 @@ class BarangController extends Controller
     public function destroy(Barang $barang)
     {
         try {
-            Cache::forget('barang');    
+            $id_merchant = auth()->user()->id_merchant;   
+            Cache::forget("barang_{$id_merchant}");    
             if($barang->gambar && Storage::disk('public')->exists('image/'.$barang->gambar)){
                 Storage::disk('public')->delete('image/'.$barang->gambar);
             }

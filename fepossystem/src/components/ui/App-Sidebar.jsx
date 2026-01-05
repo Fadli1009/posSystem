@@ -25,6 +25,7 @@ import {
 import api from "../../utility/axios";
 
 import { Link, useLocation, useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AppSidebar = () => {
   const items = [
@@ -42,15 +43,17 @@ const AppSidebar = () => {
 
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
   const handleLogout = async () => {
     try {
-      await api.post("/logout");
+      queryClient.clear();
       localStorage.removeItem("token");
-      navigate("/login");
+      await api.post("/logout");
     } catch (error) {
       console.error(error);
-
-      alert("gagal logout");
+      // alert("gagal logout");
+    } finally {
+      navigate("/login");
     }
   };
 

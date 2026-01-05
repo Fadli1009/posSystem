@@ -15,19 +15,16 @@ const ProductCard = ({
       minimumFractionDigits: 0,
     }).format(amount);
   };
+  console.log(`${import.meta.env.VITE_URL}/image/${gambar}`);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 group flex flex-col h-full">
       {/* Image Container */}
       <div className="relative w-full aspect-square bg-gradient-to-br from-orange-50 to-orange-100 overflow-hidden">
         <img
-          src={gambar}
+          src={`${import.meta.env.VITE_URL}/image/${gambar}`}
           alt={nama_barang}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-          onError={(e) => {
-            e.target.src =
-              "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=400&fit=crop";
-          }}
         />
 
         {/* Category Badge */}

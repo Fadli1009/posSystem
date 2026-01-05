@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
 use function Pest\Laravel\json;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -81,6 +82,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        Cache::forget("kategoriBarang_{$request->user()->id_merchant}");    
+        Cache::forget("barang_{$request->user()->id_merchant}");    
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
