@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/sidebar";
 
 import {
-  Box,
   LayoutDashboard,
   Store,
   ShoppingCart,
@@ -25,8 +24,12 @@ import {
 import api from "../../utility/axios";
 
 import { Link, useLocation, useNavigate } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+const user = async () => {
+  const res = await api.get("/me");
+  return res.data;
+};
 const AppSidebar = () => {
   const items = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -40,10 +43,13 @@ const AppSidebar = () => {
     { label: "Kategori Barang", href: "/kategori-barang", icon: Layers },
     { label: "Pengguna", href: "/pengguna", icon: Users },
   ];
+  const { data, isLoading } = useQuery({
+    queryFn: user,
+  });
 
   const navigate = useNavigate();
-
   const queryClient = useQueryClient();
+
   const handleLogout = async () => {
     try {
       queryClient.clear();
@@ -51,12 +57,14 @@ const AppSidebar = () => {
       await api.post("/logout");
     } catch (error) {
       console.error(error);
-      // alert("gagal logout");
     } finally {
       navigate("/login");
     }
   };
 
+  if (isLoading) {
+    return null;
+  }
   const location = useLocation();
 
   return (
@@ -128,26 +136,60 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer */}
-      <SidebarFooter className="border-t border-orange-100 bg-orange-50/30 p-3 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:py-3">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Logout">
-              <button
-                onClick={handleLogout}
-                className="flex items-center h-11 rounded-lg text-gray-700 hover:text-red-600 hover:bg-red-50 transition-all duration-200
-                  group-data-[collapsible=icon]:w-11 group-data-[collapsible=icon]:mx-auto
-                  group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0
-                  px-3 gap-3 group-data-[collapsible=icon]:gap-0 w-full"
-              >
-                <LogOut size={20} strokeWidth={2} className="flex-shrink-0" />
-                <span className="group-data-[collapsible=icon]:hidden text-sm font-medium">
-                  Logout
-                </span>
-              </button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      {/* Footer - User Profile Card */}
+      <SidebarFooter className="border-t border-orange-100 p-3 group-data-[collapsible=icon]:p-2">
+        {/* Expanded State - User Profile Card */}
+        <div className="group-data-[collapsible=icon]:hidden">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100/50 rounded-xl p-3">
+            {/* User Info */}
+            <div className="flex items-center gap-3 mb-3">
+              {/* Avatar with Initials */}
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
+                {data?.merchant.nama_merchant
+                  ?.split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase() || "US"}
+              </div>
+
+              {/* User Details */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-gray-900 truncate">
+                  {data?.merchant?.nama_merchant || "-"}
+                </p>
+                <p className="text-xs text-gray-600 truncate">
+                  {data?.name || "User"}
+                </p>
+              </div>
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-lg transition-all duration-200 text-sm font-medium shadow-sm"
+            >
+              <LogOut size={16} strokeWidth={2} />
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Collapsed State - Avatar Only - CENTERED */}
+        <div className="hidden group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center">
+          <button
+            onClick={handleLogout}
+            title={`${data?.name || "User"} - Click to logout`}
+            className="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-red-500 hover:to-red-600 rounded-full text-white font-bold text-xs shadow-md transition-all duration-200 flex items-center justify-center"
+          >
+            {data?.name
+              ?.split(" ")
+              .map((n) => n[0])
+              .join("")
+              .slice(0, 2)
+              .toUpperCase() || "US"}
+          </button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

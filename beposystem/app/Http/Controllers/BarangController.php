@@ -48,7 +48,7 @@ class BarangController extends Controller
                 'barcode'=>'nullable',
                 'id_merchant'=>'nullable',
                 'id_kategori'=>'required',                
-                'gambar'=>'required|mimes:jpg,png,jpeg|max:2048',                
+                'gambar'=>'required|mimes:jpg,png,jpeg,jfif|max:2048',                
             ],[
                 'nama_barang.required'=>'Nama barang wajib diisi',
                 'harga.required'=>'Harga barang wajib diisi',

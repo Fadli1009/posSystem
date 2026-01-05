@@ -367,7 +367,7 @@ const Barang = () => {
         <ModalForm
           mutation={mutation.isLoading}
           type={"add"}
-          judul={"Tambah Barang"}          
+          judul={"Tambah Barang"}
           setShowAddModal={setShowAddModal}
           idForm={"formAdd"}
         >
@@ -427,6 +427,7 @@ const Barang = () => {
                   type="file"
                   placeholder="0"
                   name="gambar"
+                  accept=".jpg,.jpeg,.png,.jfif"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 />
               </div>
