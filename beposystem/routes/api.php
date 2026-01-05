@@ -19,4 +19,5 @@ Route::group(['middleware'=>'auth:sanctum'], function(){
     Route::resource('barang',BarangController::class);
     Route::resource('/kategori-barang', KategoriController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
 });

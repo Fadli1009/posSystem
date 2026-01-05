@@ -80,6 +80,11 @@ class AuthController extends Controller
         }
     }
 
+    public function me(Request $request)
+    {
+        return response()->json(auth()->user()->load('role'), 200);
+    }
+
     public function logout(Request $request)
     {
         Cache::forget("kategoriBarang_{$request->user()->id_merchant}");    
